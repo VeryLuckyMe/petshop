@@ -1,16 +1,50 @@
-# React + Vite
+# Petshop Project: New Machine Setup Guide
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Follow these steps to set up and run the `petshop` project on a different computer.
 
-Currently, two official plugins are available:
+## Prerequisites
+Before you begin, ensure you have the following installed:
+- **Git**: [Download and Install Git](https://git-scm.com/downloads)
+- **Node.js** (LTS version recommended): [Download and Install Node.js](https://nodejs.org/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Step-by-Step Instructions
 
-## React Compiler
+### 1. Clone the Repository
+Open your terminal (Command Prompt, PowerShell, or Terminal) and run:
+```bash
+git clone https://github.com/VeryLuckyMe/petshop.git
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 2. Navigate to the Project Folder
+```bash
+cd petshop
+```
 
-## Expanding the ESLint configuration
+### 3. Install Dependencies
+Install all the necessary libraries defined in `package.json`:
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 4. Configure Environment Variables
+The project requires Supabase configuration. 
+1. Create a file named `.env` in the root of the project.
+2. Add your Supabase credentials:
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+> [!IMPORTANT]
+> Since `.env` files are typically ignored by Git (for security), you'll need to manually copy these values from your original project or your Supabase dashboard.
+
+### 5. Start the Development Server
+Run the project locally:
+```bash
+npm run dev
+```
+Once started, the terminal will provide a local URL (usually `http://localhost:5173`). Open this URL in your browser to view the application.
+
+## Troubleshooting
+- **Missing Dependencies**: If you see errors about missing modules, try running `npm install` again.
+- **Environment Variables**: Ensure the `.env` file is named correctly and contains the right keys.
+- **Node Version**: If you encounter version conflicts, ensure you are using a compatible Node.js version.
