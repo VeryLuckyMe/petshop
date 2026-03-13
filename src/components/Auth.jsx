@@ -1,150 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import {
-  TextField,
-  Button,
-  Typography,
-  Grid,
-  Box,
-  CircularProgress,
-  Paper,
-  Container,
-  Divider,
-  Alert
-} from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
-import PetsIcon from '@mui/icons-material/Pets';
-import PersonIcon from '@mui/icons-material/Person';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import VpnKeyIcon from '@mui/icons-material/VpnKey';
-import { styled } from '@mui/material/styles';
-
-import logo from '../assets/logo.png';
-import animation from '../assets/animation.gif';
-import twirlylines from '../assets/twirlylines.png';
-import twirlylines2 from '../assets/twirlylines2.png';
-import paw1 from '../assets/paw1.png';
-
-const BackgroundBox = styled(Box)(({ theme }) => ({
-  position: 'relative',
-  backgroundColor: '#bfd5ffff',
-  minHeight: '100vh',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  overflow: 'hidden',
-  '&::before, &::after, .bg-paw-1, .bg-paw-2, .bg-paw-3, .bg-paw-4': {
-    content: '""',
-    position: 'absolute',
-    backgroundImage: `url(${paw1})`,
-    backgroundSize: '60px 60px',
-    backgroundRepeat: 'no-repeat',
-    zIndex: 1,
-    opacity: 0.4
-  },
-  '&::before': {
-    top: '5%',
-    left: '3%',
-    transform: 'rotate(15deg)',
-    width: '60px',
-    height: '60px'
-  },
-  '&::after': {
-    bottom: '10%',
-    right: '5%',
-    transform: 'rotate(-25deg)',
-    width: '60px',
-    height: '60px'
-  },
-  '.bg-paw-1': {
-    top: '20%',
-    left: '10%',
-    transform: 'rotate(45deg)',
-    width: '60px',
-    height: '60px'
-  },
-  '.bg-paw-2': {
-    bottom: '30%',
-    left: '15%',
-    transform: 'rotate(-10deg)',
-    width: '60px',
-    height: '60px'
-  },
-  '.bg-paw-3': {
-    top: '40%',
-    right: '8%',
-    transform: 'rotate(35deg)',
-    width: '60px',
-    height: '60px'
-  },
-  '.bg-paw-4': {
-    bottom: '15%',
-    right: '20%',
-    transform: 'rotate(-45deg)',
-    width: '60px',
-    height: '60px'
-  }
-}));
-
-const PetPatternBackground = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  zIndex: 0,
-  background: 'linear-gradient(135deg, #a6c2ffff, #fcfcfc)',
-  overflow: 'hidden',
-  '&::before, &::after, .twirly-1, .twirly-2, .twirly-3': {
-    content: '""',
-    position: 'absolute',
-    backgroundSize: 'contain',
-    backgroundRepeat: 'no-repeat',
-    opacity: 0.2,
-  },
-  '&::before': {
-    backgroundImage: `url(${twirlylines})`,
-    top: '35%',
-    left: '2%',
-    width: '250px',
-    height: '250px',
-    transform: 'rotate(10deg)'
-  },
-  '&::after': {
-    backgroundImage: `url(${twirlylines2})`,
-    bottom: '5%',
-    right: '2%',
-    width: '300px',
-    height: '300px',
-    transform: 'rotate(-15deg)'
-  },
-  '.twirly-1': {
-    backgroundImage: `url(${twirlylines})`,
-    top: '25%',
-    left: '15%',
-    width: '200px',
-    height: '200px',
-    transform: 'rotate(-5deg)'
-  },
-  '.twirly-2': {
-    backgroundImage: `url(${twirlylines2})`,
-    bottom: '25%',
-    left: '10%',
-    width: '230px',
-    height: '230px',
-    transform: 'rotate(20deg)'
-  },
-  '.twirly-3': {
-    backgroundImage: `url(${twirlylines})`,
-    top: '50%',
-    right: '15%',
-    width: '250px',
-    height: '250px',
-    transform: 'rotate(5deg)'
-  }
-}));
-
 
 function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -168,7 +24,6 @@ function Auth() {
   };
 
   const handleSignUp = async () => {
-    // Validation
     if (!formData.email || !formData.password || !formData.confirmPassword || !formData.firstName || !formData.lastName || !formData.username) {
       throw new Error("All fields are required for registration.");
     }
@@ -176,7 +31,6 @@ function Auth() {
       throw new Error("Passwords do not match!");
     }
     
-    // Supabase Sign Up
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
@@ -196,13 +50,11 @@ function Auth() {
       throw signUpError;
     }
 
-    // Insert into the public database table created by the user
-    // Make sure the columns match their sample CSV structure
     const { error: insertError } = await supabase
       .from('zootopiaDatabase')
       .insert([
         { 
-          id: authData.user.id, // Link to the Auth User ID
+          id: authData.user.id, 
           username: formData.username, 
           first_name: formData.firstName, 
           last_name: formData.lastName, 
@@ -211,12 +63,7 @@ function Auth() {
         }
       ]);
 
-    if (insertError) {
-      console.error("Error inserting into zootopiaDatabase:", insertError);
-      // We don't necessarily want to break the whole flow if the public insert fails, 
-      // but we should log it for debugging.
-    }
-    
+    if (insertError) console.error("Error inserting into zootopiaDatabase:", insertError);
     return authData;
   };
 
@@ -251,20 +98,12 @@ function Auth() {
         await handleSignUp();
         setIsLoading(false);
         setSuccessMsg("Registration successful! Entering Dashboard...");
-        
-        // Short delay to show success string before navigation
-        setTimeout(() => {
-           navigate('/dashboard');
-        }, 1500);
-
+        setTimeout(() => navigate('/dashboard'), 1500);
       } else {
         await handleLogin();
         setIsLoading(false);
         setIsLoadingPage(true);
-
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 3000);
+        setTimeout(() => navigate('/dashboard'), 3000);
       }
     } catch (err) {
       setIsLoading(false);
@@ -288,327 +127,195 @@ function Auth() {
 
   if (isLoadingPage) {
     return (
-      <BackgroundBox>
-        <PetPatternBackground />
-        <Container 
-          maxWidth="sm" 
-          sx={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            height: '100vh', 
-            textAlign: 'center', 
-            position: 'relative', 
-            zIndex: 10 
-          }}
-        >
-          <div 
-            style={{
-              display: 'flex',
-              gap: '20px', 
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <img 
-              src={animation} 
-              alt="Loading 1" 
-              style={{ 
-                width: '150px', 
-                height: '150px', 
-                objectFit: 'contain', 
-              }} 
-            />
-            <img 
-              src={animation} 
-              alt="Loading 2" 
-              style={{ 
-                width: '150px', 
-                height: '150px', 
-                objectFit: 'contain', 
-              }} 
-            />
-            <img 
-              src={animation} 
-              alt="Loading 3" 
-              style={{ 
-                width: '150px', 
-                height: '150px', 
-                objectFit: 'contain', 
-              }} 
-            />
-          </div>
-          <Typography 
-            variant="h5" 
-            sx={{ 
-              color: '#2C3E50', 
-              fontWeight: 600,
-              mb: 2
-            }}
-          >
-            Preparing Your Pet Care Experience
-          </Typography>
-          <Typography 
-            variant="body1" 
-            sx={{ 
-              color: '#7F8C8D', 
-              maxWidth: 400,
-              mx: 'auto'
-            }}
-          >
-            Loading your dashboard securely via Supabase...
-          </Typography>
-        </Container>
-      </BackgroundBox>
+      <div className="flex h-screen w-full flex-col items-center justify-center bg-background-light dark:bg-background-dark font-display">
+        <div className="flex gap-4 mb-6">
+          <div className="h-12 w-12 animate-bounce bg-primary rounded-full"></div>
+          <div className="h-12 w-12 animate-bounce bg-primary rounded-full [animation-delay:-.3s]"></div>
+          <div className="h-12 w-12 animate-bounce bg-primary rounded-full [animation-delay:-.5s]"></div>
+        </div>
+        <h2 className="text-2xl font-bold text-brand-dark dark:text-white mb-2">Preparing Your Pet Care Experience</h2>
+        <p className="text-brand-light dark:text-brand-soft">Loading your dashboard securely via Supabase...</p>
+      </div>
     );
-  }  
-  
+  }
+
   return (
-    <BackgroundBox>
-      <BackgroundBox>
-        <div className="bg-paw-1" />
-        <div className="bg-paw-2" />
-        <div className="bg-paw-3" />
-        <div className="bg-paw-4" />
-      </BackgroundBox>
-      <PetPatternBackground />
-      <div className="twirly-1" />
-        <div className="twirly-2" />
-        <div className="twirly-3" />
-      <Container maxWidth="lg">
-        <Paper 
-          elevation={12} 
-          sx={{ 
-            display: 'flex', 
-            borderRadius: 4, 
-            overflow: 'hidden',
-            position: 'relative',
-            zIndex: 10,
-            maxWidth: '1100px',
-            margin: 'auto'
-          }}
-        >
-          <Box
-            sx={{
-              width: '60%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 4,
-              backgroundColor: 'white',   
-              borderRight: '1px solid #E0E0E0',
-              position: 'relative'
-            }}
-          >
-            <Box 
-              sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundImage: `url(${twirlylines}), url(${twirlylines2})`,
-                backgroundPosition: 'top left, bottom right',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: '200px, 200px',
-                opacity: 0.3,
-                zIndex: 1
-              }}
-            />
-            <Box 
-              sx={{
-                zIndex: 2,
-                position: 'relative',
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
-              }}
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={isSignUp ? 'signup' : 'login'}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
-                  style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-                >
-                  <Typography 
-                    variant="h4" 
-                    sx={{ 
-                      mb: 3, 
-                      fontWeight: 'bold', 
-                      display: 'flex', 
-                      alignItems: 'center',
-                      color: '#2C3E50' 
-                    }}
-                  >
-                    <PetsIcon sx={{ mr: 2, color: '#573affff' }} />
-                    {isSignUp ? 'Create Account' : 'Welcome Back'}
-                  </Typography>
-
-                  {error && (
-                    <Alert severity="error" sx={{ width: '100%', maxWidth: '400px', mb: 2 }}>
-                      {error}
-                    </Alert>
-                  )}
-                  {successMsg && (
-                    <Alert severity="success" sx={{ width: '100%', maxWidth: '400px', mb: 2 }}>
-                      {successMsg}
-                    </Alert>
-                  )}
-
-                  <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '400px' }}>
-                    {isSignUp && (
-                      <>
-                        <TextField
-                          label="Username"
-                          name="username"
-                          value={formData.username || ''}
-                          onChange={handleChange}
-                          fullWidth
-                          margin="normal"
-                          variant="outlined"
-                          InputProps={{
-                            startAdornment: <PersonIcon sx={{ color: '#573affff', mr: 1 }} />
-                          }}
-                        />
-                        <Grid container spacing={2}>
-                          <Grid item xs={6}>
-                            <TextField
-                              label="First Name"
-                              name="firstName"
-                              value={formData.firstName}
-                              onChange={handleChange}
-                              fullWidth
-                              variant="outlined"
-                            />
-                          </Grid>
-                          <Grid item xs={6}>
-                            <TextField
-                              label="Last Name"
-                              name="lastName"
-                              value={formData.lastName}
-                              onChange={handleChange}
-                              fullWidth
-                              variant="outlined"
-                            />
-                          </Grid>
-                        </Grid>
-                      </>
-                    )}
-
-                    <TextField
-                      label="Email"
-                      name="email"
-                      value={formData.email || ''}
-                      onChange={handleChange}
-                      fullWidth
-                      margin="normal"
-                      variant="outlined"
-                      InputProps={{
-                        startAdornment: <MailOutlineIcon sx={{ color: '#573affff', mr: 1 }} />
-                      }}
-                    />
-
-                    <TextField
-                      label="Password"
-                      name="password"
-                      type="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      fullWidth
-                      margin="normal"
-                      variant="outlined"
-                      InputProps={{
-                        startAdornment: <VpnKeyIcon sx={{ color: '#573affff', mr: 1 }} />
-                      }}
-                    />
-                    {isSignUp && (
-                      <TextField
-                        label="Confirm Password"
-                        name="confirmPassword"
-                        type="password"
-                        value={formData.confirmPassword || ''}
-                        onChange={handleChange}
-                        fullWidth
-                        margin="normal"
-                        variant="outlined"
-                        InputProps={{
-                          startAdornment: <VpnKeyIcon sx={{ color: '#573affff', mr: 1 }} />
-                        }}
-                      />
-                    )}
-
-                    <Button 
-                      type="submit" 
-                      fullWidth 
-                      variant="contained" 
-                      disabled={isLoading}
-                      sx={{ 
-                        mt: 3, 
-                        py: 1.5, 
-                        backgroundColor: '#573affff', 
-                        '&:hover': { backgroundColor: '#2e0affff' } 
-                      }}
-                    >
-                      {isLoading ? (
-                        <CircularProgress size={24} color="inherit" />
-                      ) : (
-                        isSignUp ? 'Sign Up' : 'Log In'
-                      )}
-                    </Button>
-                  </form>
-
-                  <Divider sx={{ width: '100%', my: 2 }} />
-
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
-                      textAlign: 'center', 
-                      color: '#34495E' 
-                    }}
-                  >
-                    {isSignUp 
-                      ? 'Already have an account?' 
-                      : "Don't have an account?"}
-                    <Button 
-                      color="primary" 
-                      onClick={handleToggleForm}
-                      sx={{ 
-                        ml: 1, 
-                        textTransform: 'none', 
-                        color: '#573affff',
-                        fontWeight: 'bold'
-                      }}
-                    >
-                      {isSignUp ? 'Log In' : 'Sign Up'}
-                    </Button>
-                  </Typography>
-                </motion.div>
-              </AnimatePresence>
-            </Box>
-          </Box>
+    <div className="min-h-screen w-full flex items-center justify-center bg-background-light dark:bg-background-dark font-display p-6 relative overflow-hidden">
+      {/* Background paw decorations */}
+      <span className="material-symbols-outlined absolute -top-10 -left-10 text-[200px] text-primary/5 rotate-12 select-none">pets</span>
+      <span className="material-symbols-outlined absolute -bottom-20 -right-20 text-[300px] text-primary/5 -rotate-12 select-none">pets</span>
+      
+      <div className="w-full max-w-[1000px] bg-white dark:bg-brand-dark rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden relative z-10">
+        {/* Left Side: Branding/Image */}
+        <div className="w-full md:w-1/2 bg-brand-medium p-12 flex flex-col justify-center items-center text-white relative">
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
           
-          <Box 
-            component="img"
-            src={logo}
-            alt="Logo"
-            sx={{
-              width: '400px',
-              maxHeight: '400px',
-              objectFit: 'contain',
-              zIndex: 2,
-              position: 'relative',
-              marginTop: '30px'
-            }}
-          />
-        </Paper>
-      </Container>
-    </BackgroundBox>
+          <div className="flex items-center gap-3 mb-8">
+            <span className="material-symbols-outlined text-5xl">pets</span>
+            <h1 className="text-4xl font-black tracking-tight">Zootopia</h1>
+          </div>
+          
+          <div className="text-center space-y-4 max-w-sm">
+            <h2 className="text-2xl font-bold">Your Pet's Happy Place</h2>
+            <p className="text-brand-soft leading-relaxed">
+              Professional and compassionate animal care services tailored to your pet's unique needs.
+            </p>
+          </div>
+          
+          <div className="mt-12 grid grid-cols-2 gap-4 w-full opacity-50">
+             <div className="h-1 bg-white/20 rounded-full"></div>
+             <div className="h-1 bg-white/20 rounded-full"></div>
+          </div>
+        </div>
+
+        {/* Right Side: Form */}
+        <div className="w-full md:w-1/2 p-8 md:p-12 bg-white dark:bg-brand-dark">
+          <div className="max-w-md mx-auto">
+            <div className="mb-8">
+              <h3 className="text-3xl font-black text-brand-dark dark:text-white mb-2">
+                {isSignUp ? 'Create Account' : 'Welcome Back'}
+              </h3>
+              <p className="text-brand-light dark:text-brand-soft">
+                {isSignUp ? 'Join the Zootopia community today' : 'Log in to manage your pets'}
+              </p>
+            </div>
+
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded shadow-sm flex items-center gap-3">
+                <span className="material-symbols-outlined text-lg">error</span>
+                {error}
+              </div>
+            )}
+            {successMsg && (
+              <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 text-sm rounded shadow-sm flex items-center gap-3">
+                <span className="material-symbols-outlined text-lg">check_circle</span>
+                {successMsg}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {isSignUp && (
+                <>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-brand-dark dark:text-brand-soft uppercase tracking-wider pl-1">Username</label>
+                    <div className="relative">
+                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-brand-light text-xl">person</span>
+                      <input
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                        placeholder="Choose a username"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-brand-dark dark:text-brand-soft uppercase tracking-wider pl-1">First Name</label>
+                      <input
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                        placeholder="First name"
+                        type="text"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-brand-dark dark:text-brand-soft uppercase tracking-wider pl-1">Last Name</label>
+                      <input
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                        placeholder="Last name"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-brand-dark dark:text-brand-soft uppercase tracking-wider pl-1">Email Address</label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-brand-light text-xl">mail</span>
+                  <input
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                    placeholder="example@mail.com"
+                    type="email"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-brand-dark dark:text-brand-soft uppercase tracking-wider pl-1">Password</label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-brand-light text-xl">lock</span>
+                  <input
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                    placeholder="••••••••"
+                    type="password"
+                  />
+                </div>
+              </div>
+
+              {isSignUp && (
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-brand-dark dark:text-brand-soft uppercase tracking-wider pl-1">Confirm Password</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-brand-light text-xl">lock_reset</span>
+                    <input
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                      placeholder="••••••••"
+                      type="password"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-4 bg-primary text-white font-bold rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-70"
+              >
+                {isLoading ? (
+                  <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <>
+                    <span>{isSignUp ? 'Create Free Account' : 'Sign In to Account'}</span>
+                    <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="mt-8 pt-6 border-t border-slate-100 dark:border-white/10 text-center">
+              <p className="text-brand-light dark:text-brand-soft">
+                {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+                <button
+                  onClick={handleToggleForm}
+                  className="ml-2 text-primary font-bold hover:underline"
+                >
+                  {isSignUp ? 'Sign In' : 'Register Now'}
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
