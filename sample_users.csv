@@ -1,0 +1,4 @@
+id,username,first_name,last_name,email,role,created_at
+1,admin_user,Admin,System,admin@example.com,admin,2026-03-13 10:00:00
+2,johndoe,John,Doe,john@example.com,user,2026-03-13 10:05:00
+3,janedoe,Jane,Doe,jane@example.com,user,2026-03-13 10:10:00
