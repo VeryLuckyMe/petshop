@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Dashboard() {
   const [user, setUser] = useState(null);
@@ -77,9 +77,12 @@ function Dashboard() {
             </label>
             <div className="flex items-center gap-4">
               {user && (
-                <span className="text-brand-soft text-sm hidden sm:inline">
+                <Link
+                  to="/profile"
+                  className="text-brand-soft text-sm hidden sm:inline hover:text-primary transition-colors cursor-pointer"
+                >
                   {user.user_metadata?.username || user.email}
-                </span>
+                </Link>
               )}
               <button
                 onClick={handleSignOut}

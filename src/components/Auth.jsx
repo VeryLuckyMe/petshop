@@ -54,7 +54,6 @@ function Auth() {
       .from('zootopiaDatabase')
       .insert([
         { 
-          id: authData.user.id, 
           username: formData.username, 
           first_name: formData.firstName, 
           last_name: formData.lastName, 
@@ -63,7 +62,7 @@ function Auth() {
         }
       ]);
 
-    if (insertError) console.error("Error inserting into zootopiaDatabase:", insertError);
+    if (insertError) throw new Error("Account created but profile save failed: " + insertError.message);
     return authData;
   };
 
