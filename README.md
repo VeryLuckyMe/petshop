@@ -1,61 +1,71 @@
-# Petshop Project: Setup & Development Guide
+# 🐾 Zootopia Petshop System
 
-Follow these steps to set up, run, and update the `petshop` project on any computer.
+A professional, enterprise-ready Petshop management system built with **React**, **Vite**, and **Supabase**. This project follows the **Vertical Slicing** architecture and **MVP (Model-View-Presenter)** design pattern to ensure scalability, maintainability, and clear separation of concerns.
 
-## Prerequisites
-Before you begin, ensure you have the following installed:
-- **Git**: [Download and Install Git](https://git-scm.com/downloads)
-- **Node.js** (LTS version recommended): [Download and Install Node.js](https://nodejs.org/)
+## 🏗️ Architecture: Vertical Slicing & MVP
 
-## Step 1: Initial Setup
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/VeryLuckyMe/petshop.git
-   cd petshop
-   ```
+This system is organized by features rather than by technical layers. Each feature (e.g., Auth, Cart, Profile) resides in its own "slice" within `src/features/`.
 
-2. **Install Dependencies**
-   ```bash
-   npm install
-   ```
+### **Design Pattern (MVP)**
+Inside each slice, we follow the **Model-View-Presenter** pattern:
+*   **Model**: Manages data fetching and state logic (via Supabase and React Context).
+*   **View**: Pure UI components built with Tailwind CSS.
+*   **Presenter**: Logic hooks that connect the View to the Model, handling business rules.
 
-3. **Configure Environment Variables**
-   Create a `.env` file in the root directory and add your Supabase credentials:
-   ```env
-   VITE_SUPABASE_URL=your_supabase_project_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-   > [!IMPORTANT]
-   > You must use the same Supabase keys used in the original project to keep the data connected.
+## ✨ Key Features
 
-4. **Start Development Server**
-   ```bash
-   npm run dev
-   ```
+*   🔐 **Secure Authentication**: User registration and login powered by Supabase Auth.
+*   🛒 **Persistent Shopping Cart**: State-of-the-art cart system with real-time database synchronization.
+*   📅 **Service Booking**: Appointment management for grooming and consultations.
+*   👤 **Profile Management**: Detailed account settings, including avatar uploads and password changes.
+*   🛍️ **Product Catalog**: Dynamic product browsing with category filtering.
+*   📱 **Responsive Design**: Fully optimized for mobile, tablet, and desktop viewing.
+
+## 🛠️ Tech Stack
+
+*   **Frontend**: React (Vite)
+*   **Styling**: Tailwind CSS
+*   **Backend/Database**: Supabase (PostgreSQL)
+*   **State Management**: React Context API & useReducer
+*   **Icons**: Google Material Symbols
+
+## 🚀 Getting Started
+
+### **1. Prerequisites**
+*   **Node.js** (v18+)
+*   **npm** or **yarn**
+
+### **2. Installation**
+```bash
+git clone https://github.com/VeryLuckyMe/petshop.git
+cd petshop
+npm install
+```
+
+### **3. Environment Setup**
+Create a `.env` file in the root directory:
+```env
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_ANON_KEY=your_anon_key
+```
+
+### **4. Database Setup**
+Ensure the following tables are created in your Supabase project:
+*   `products`
+*   `appointments`
+*   `cart`
+*   `zootopiaDatabase` (Profiles)
+
+### **5. Run Locally**
+```bash
+npm run dev
+```
+
+## 📝 Assignment Requirements
+This project fulfills the requirements for:
+*   **Backend Development & Deployment**: Full Supabase integration and normalized database schema.
+*   **React Web Development**: Modular architecture, polished UI/UX, and complex state management.
 
 ---
-
-## Step 2: How to Update Your Code (Git Workflow)
-Whenever you make changes and want to save them to GitHub, follow these 3 steps:
-
-1. **Stage Changes**
-   ```bash
-   git add .
-   ```
-
-2. **Commit Changes** (Save locally)
-   ```bash
-   git commit -m "Description of what you changed"
-   ```
-
-3. **Push Changes** (Send to GitHub)
-   ```bash
-   git push origin main
-   ```
-
----
-
-## Troubleshooting
-- **Missing Dependencies**: Run `npm install` again if you see "module not found" errors.
-- **Tailwind Issues**: If styles look broken, ensure you ran `npm install` and restart the dev server.
-- **Syncing Issues**: If you work on different machines, run `git pull origin main` before you start working.
+Built with ❤️ by Clarence Kirk Macapagal
+```
