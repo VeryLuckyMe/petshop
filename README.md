@@ -67,5 +67,5 @@ This project fulfills the requirements for:
 *   **React Web Development**: Modular architecture, polished UI/UX, and complex state management.
 
 ---
-Built with ❤️ by Clarence Kirk Macapagal
+Built with ❤️ by Clarence Kirk Macapobre
 ```
