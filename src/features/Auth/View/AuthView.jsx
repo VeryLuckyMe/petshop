@@ -5,8 +5,8 @@ import { useAuthPresenter } from '../Presenter/AuthPresenter';
 function AuthView() {
   const navigate = useNavigate();
   const {
-    isSignUp, isLoading, isLoadingPage, showPassword, error, successMsg, formData,
-    handleToggleForm, handleChange, handleSubmit, setShowPassword
+    isSignUp, isLoading, isLoadingPage, showPassword, error, successMsg, formData, agreeTerms,
+    handleToggleForm, handleChange, handleSubmit, setShowPassword, setAgreeTerms
   } = useAuthPresenter(navigate);
 
   if (isLoadingPage) {
@@ -86,6 +86,18 @@ function AuthView() {
                     <label className="text-slate-700 text-sm font-semibold">Confirm</label>
                     <input name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 outline-none" placeholder="••••••••" type="password" />
                   </div>
+                </div>
+                <div className="flex items-center gap-2 mt-4 select-none">
+                  <input
+                    type="checkbox"
+                    id="agreeTerms"
+                    checked={agreeTerms}
+                    onChange={(e) => setAgreeTerms(e.target.checked)}
+                    className="h-4 w-4 rounded border-slate-300 text-[#1B3C53] focus:ring-[#1B3C53] cursor-pointer"
+                  />
+                  <label htmlFor="agreeTerms" className="text-slate-600 text-sm cursor-pointer">
+                    I agree to the <a href="#" onClick={(e) => e.preventDefault()} className="underline font-semibold" style={{ color: '#1B3C53' }}>Terms of Service</a> and <a href="#" onClick={(e) => e.preventDefault()} className="underline font-semibold" style={{ color: '#1B3C53' }}>Privacy Policy</a>
+                  </label>
                 </div>
                 <button type="submit" disabled={isLoading} className="w-full text-white font-bold py-4 rounded-lg mt-4 disabled:opacity-70" style={{ backgroundColor: '#1B3C53' }}>
                   {isLoading ? 'Creating Account...' : 'Create Account'}

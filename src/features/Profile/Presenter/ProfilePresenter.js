@@ -75,8 +75,21 @@ export const useProfilePresenter = (navigate) => {
     if (!photoBlob) return;
     setPhotoLoading(true);
     try {
-      const { error } = await ProfileModel.updateAvatar(user.email, photoBlob);
-      if (error) throw error;
+      const fileExt = photoBlob.name ? photoBlob.name.split('.').pop() : 'png';
+      const fileName = `${user.id || 'avatar'}_${Date.now()}.${fileExt}`;
+      const filePath = `public/${fileName}`;
+
+      // Upload raw file to Supabase storage
+      const { error: uploadError } = await ProfileModel.uploadAvatarStorage(filePath, photoBlob);
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = ProfileModel.getPublicUrl(filePath);
+
+      // Update user profile record with storage url
+      const { error: dbError } = await ProfileModel.updateAvatar(user.email, publicUrl);
+      if (dbError) throw dbError;
+
       await loadProfile(user.email);
       setPhotoStatus({ type: 'success', msg: 'Photo saved!' });
       setTimeout(() => setShowPhotoModal(false), 1200);

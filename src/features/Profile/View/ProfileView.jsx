@@ -247,9 +247,9 @@ function ProfileView() {
                     const reader = new FileReader();
                     reader.onloadend = () => {
                       setPhotoPreview(reader.result);
-                      setPhotoBlob(reader.result);
                     };
                     reader.readAsDataURL(file);
+                    setPhotoBlob(file);
                   }
                 }}
                 className="hidden"

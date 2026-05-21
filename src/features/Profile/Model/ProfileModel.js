@@ -16,6 +16,12 @@ export const ProfileModel = {
   async updateAvatar(email, url) {
     return await supabase.from('zootopiaDatabase').update({ avatar_url: url }).eq('email', email);
   },
+  async uploadAvatarStorage(filePath, file) {
+    return await supabase.storage.from('avatars').upload(filePath, file, { upsert: true });
+  },
+  getPublicUrl(filePath) {
+    return supabase.storage.from('avatars').getPublicUrl(filePath);
+  },
   async getSession() {
     return await supabase.auth.getSession();
   },
