@@ -20,14 +20,14 @@ function ProfileView() {
   const fullName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || displayName;
 
   return (
-    <div className="min-h-screen bg-slate-100 font-display">
+    <div className="min-h-screen ambient-bg font-display text-slate-800">
       <Navbar user={user} />
       <main className="max-w-5xl mx-auto px-6 py-10 space-y-6">
         {/* Hero */}
         <div className="relative bg-gradient-to-br from-orange-500 to-amber-400 rounded-3xl p-8 text-white shadow-xl">
           <div className="flex items-center gap-6">
             <div className="relative">
-              <div className="w-28 h-28 rounded-2xl border-4 border-white/30 overflow-hidden bg-orange-300">
+              <div className="w-28 h-28 rounded-2xl pulse-avatar-frame overflow-hidden bg-orange-300 border-white/30">
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} className="w-full h-full object-cover" />
                 ) : (
@@ -51,7 +51,7 @@ function ProfileView() {
         </div>
 
         {/* Tabs */}
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="glass-card rounded-3xl overflow-hidden border border-white/40 shadow-xl">
           <div className="flex border-b border-slate-100">
             {TABS.map((tab) => (
               <button
@@ -128,33 +128,36 @@ function ProfileView() {
                     {editStatus.msg}
                   </div>
                 )}
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 focus-line-container">
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Username</label>
                   <input
                     value={editForm.username}
                     onChange={(e) => setEditForm({ ...editForm, username: e.target.value })}
-                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    className="w-full p-3 bg-slate-50/50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white transition-all text-sm"
                     placeholder="Username"
                   />
+                  <span className="focus-line-bar"></span>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 focus-line-container">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">First Name</label>
                     <input
                       value={editForm.first_name}
                       onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
-                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400"
+                      className="w-full p-3 bg-slate-50/50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white transition-all text-sm"
                       placeholder="First Name"
                     />
+                    <span className="focus-line-bar"></span>
                   </div>
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 focus-line-container">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Last Name</label>
                     <input
                       value={editForm.last_name}
                       onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
-                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400"
+                      className="w-full p-3 bg-slate-50/50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white transition-all text-sm"
                       placeholder="Last Name"
                     />
+                    <span className="focus-line-bar"></span>
                   </div>
                 </div>
                 <button
@@ -175,25 +178,27 @@ function ProfileView() {
                     {passStatus.msg}
                   </div>
                 )}
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 focus-line-container">
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">New Password</label>
                   <input
                     type="password"
                     value={passForm.newPassword}
                     onChange={(e) => setPassForm({ ...passForm, newPassword: e.target.value })}
-                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    className="w-full p-3 bg-slate-50/50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white transition-all text-sm"
                     placeholder="••••••••"
                   />
+                  <span className="focus-line-bar"></span>
                 </div>
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 focus-line-container">
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Confirm Password</label>
                   <input
                     type="password"
                     value={passForm.confirmPassword}
                     onChange={(e) => setPassForm({ ...passForm, confirmPassword: e.target.value })}
-                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    className="w-full p-3 bg-slate-50/50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white transition-all text-sm"
                     placeholder="••••••••"
                   />
+                  <span className="focus-line-bar"></span>
                 </div>
                 <button
                   type="submit"

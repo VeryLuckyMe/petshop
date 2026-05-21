@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { useCartModel } from '../features/Cart/Model/CartContext';
 
 function Navbar({ user }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { getCartItemsCount } = useCartModel();
 
   const handleSignOut = async () => {
@@ -12,60 +13,84 @@ function Navbar({ user }) {
     navigate('/');
   };
 
+  const isActive = (path) => location.pathname === path;
+
   return (
-    <header className="flex items-center justify-between whitespace-nowrap bg-brand-dark border-b border-brand-medium px-6 md:px-20 py-4 font-display">
-      <div className="flex items-center gap-8">
-        <Link to="/dashboard" className="flex items-center gap-3 text-white group">
-          <span className="material-symbols-outlined text-3xl group-hover:text-primary transition-colors">pets</span>
-          <h2 className="text-white text-xl font-bold leading-tight tracking-tight group-hover:text-primary transition-colors">Zootopia</h2>
-        </Link>
-        <nav className="hidden md:flex items-center gap-8">
-          <Link className="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" to="/dashboard">Home</Link>
-          <Link className="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" to="/products">Products</Link>
-          <Link className="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" to="/services">Services</Link>
-          <Link className="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" to="/about">About Us</Link>
-        </nav>
-      </div>
-      <div className="flex flex-1 justify-end gap-6 items-center">
-        <label className="hidden lg:flex flex-col min-w-40 !h-10 max-w-64">
-          <div className="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden">
-            <div className="text-brand-soft flex border-none bg-brand-medium items-center justify-center pl-4 pr-1">
-              <span className="material-symbols-outlined text-xl">search</span>
+    <div className="w-full max-w-[1200px] mx-auto px-6 pt-6 font-display sticky top-0 z-50">
+      <header className="glass-nav rounded-full px-6 md:px-8 py-3.5 flex items-center justify-between whitespace-nowrap transition-all duration-300">
+        <div className="flex items-center gap-10">
+          <Link to="/dashboard" className="flex items-center gap-2.5 text-[#1B3C53] group">
+            <div className="w-9 h-9 rounded-full bg-[#1B3C53] group-hover:bg-[#ec5b13] transition-colors duration-500 flex items-center justify-center text-white">
+              <span className="material-symbols-outlined text-xl">pets</span>
             </div>
-            <input
-              className="form-input flex w-full min-w-0 flex-1 border-none bg-brand-medium text-white focus:ring-0 placeholder:text-brand-soft/60 px-2 text-sm font-normal"
-              placeholder="Search..."
-              type="text"
-            />
-          </div>
-        </label>
-        <div className="flex items-center gap-4">
-          {user && (
-            <Link
-              to="/profile"
-              className="text-brand-soft text-sm hidden sm:inline hover:text-primary transition-colors cursor-pointer font-bold"
-            >
-              {user.user_metadata?.username || user.email}
-            </Link>
-          )}
-          <Link to="/cart" className="relative text-brand-soft hover:text-primary transition-colors flex items-center justify-center">
-            <span className="material-symbols-outlined text-2xl">shopping_cart</span>
-            {getCartItemsCount() > 0 && (
-              <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                {getCartItemsCount()}
-              </span>
-            )}
+            <h2 className="text-[#1B3C53] text-lg font-black leading-tight tracking-tight font-display transition-colors duration-500">
+              Zootopia
+            </h2>
           </Link>
-          <button
-            onClick={handleSignOut}
-            className="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold transition-all hover:brightness-110"
-          >
-            <span>Sign Out</span>
-          </button>
+          <nav className="hidden md:flex items-center gap-7">
+            {[
+              { label: 'Home', path: '/dashboard' },
+              { label: 'Products', path: '/products' },
+              { label: 'Services', path: '/services' },
+              { label: 'About Us', path: '/about' },
+            ].map((link) => (
+              <Link
+                key={link.path}
+                className={`relative text-sm font-semibold transition-colors duration-300 py-1 ${
+                  isActive(link.path) ? 'text-[#ec5b13]' : 'text-[#456882] hover:text-[#1B3C53]'
+                }`}
+                to={link.path}
+              >
+                {link.label}
+                {isActive(link.path) && (
+                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#ec5b13] rounded-full animate-pulse" />
+                )}
+              </Link>
+            ))}
+          </nav>
         </div>
-      </div>
-    </header>
+        <div className="flex items-center gap-5">
+          <label className="hidden lg:flex flex-col w-48">
+            <div className="flex w-full items-center rounded-full h-8.5 overflow-hidden bg-slate-100 border border-slate-200 focus-within:border-[#ec5b13]/50 focus-within:bg-white transition-all duration-300">
+              <div className="text-[#456882] flex items-center justify-center pl-3">
+                <span className="material-symbols-outlined text-lg">search</span>
+              </div>
+              <input
+                className="w-full bg-transparent border-none focus:ring-0 placeholder:text-slate-400 text-xs text-[#1B3C53] font-normal px-2 outline-none"
+                placeholder="Search resources..."
+                type="text"
+              />
+            </div>
+          </label>
+          <div className="flex items-center gap-4">
+            {user && (
+              <Link
+                to="/profile"
+                className="text-[#1B3C53] text-xs hidden sm:inline hover:text-[#ec5b13] transition-colors cursor-pointer font-bold tracking-wide uppercase"
+              >
+                {user.user_metadata?.username || user.email.split('@')[0]}
+              </Link>
+            )}
+            <Link to="/cart" className="relative text-[#1B3C53] hover:text-[#ec5b13] transition-colors duration-300 flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-100/60">
+              <span className="material-symbols-outlined text-xl">shopping_cart</span>
+              {getCartItemsCount() > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-[#ec5b13] text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                  {getCartItemsCount()}
+                </span>
+              )}
+            </Link>
+            <button
+              onClick={handleSignOut}
+              className="flex cursor-pointer items-center justify-center rounded-full h-9 px-5 bg-[#1B3C53] hover:bg-[#ec5b13] text-white text-xs font-bold transition-all duration-500 shadow-md hover:shadow-[#ec5b13]/20"
+            >
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </header>
+    </div>
   );
 }
 
 export default Navbar;
+
