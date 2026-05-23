@@ -135,19 +135,32 @@ function AdminDashboardView() {
       description: productForm.description
     };
 
-    if (editingProductId) {
-      await supabase.from('products').update(payload).eq('id', editingProductId);
-    } else {
-      await supabase.from('products').insert([payload]);
+    try {
+      if (editingProductId) {
+        const { error } = await supabase.from('products').update(payload).eq('id', editingProductId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('products').insert([payload]);
+        if (error) throw error;
+      }
+      setShowProductModal(false);
+      fetchProducts();
+    } catch (err) {
+      console.error('Failed to save product:', err);
+      alert('Failed to save product: ' + err.message);
     }
-    setShowProductModal(false);
-    fetchProducts();
   };
 
   const handleDeleteProduct = async (id) => {
     if (!window.confirm('Remove this product from the store?')) return;
-    await supabase.from('products').delete().eq('id', id);
-    fetchProducts();
+    try {
+      const { error } = await supabase.from('products').delete().eq('id', id);
+      if (error) throw error;
+      fetchProducts();
+    } catch (err) {
+      console.error('Failed to delete product:', err);
+      alert('Failed to delete product: ' + err.message);
+    }
   };
 
   // Order Shipping status handlers
