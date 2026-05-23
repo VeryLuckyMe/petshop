@@ -78,32 +78,56 @@ function AdminDashboardView() {
   };
 
   const handleUpdateUser = async (id) => {
-    await supabase.from('zootopiaDatabase').update({
-      username: editUserForm.username,
-      role: editUserForm.role,
-      loyalty_points: parseInt(editUserForm.loyalty_points, 10) || 0,
-    }).eq('id', id);
-    setEditingUserId(null);
-    fetchUsers();
+    try {
+      const { error } = await supabase.from('zootopiaDatabase').update({
+        username: editUserForm.username,
+        role: editUserForm.role,
+        loyalty_points: parseInt(editUserForm.loyalty_points, 10) || 0,
+      }).eq('id', id);
+      if (error) throw error;
+      setEditingUserId(null);
+      fetchUsers();
+    } catch (err) {
+      console.error('Failed to update user:', err);
+      alert('Failed to update user: ' + err.message);
+    }
   };
 
   const handleDeleteUser = async (id) => {
     if (!window.confirm('Delete this user profile? This cannot be undone.')) return;
-    await supabase.from('zootopiaDatabase').delete().eq('id', id);
-    fetchUsers();
+    try {
+      const { error } = await supabase.from('zootopiaDatabase').delete().eq('id', id);
+      if (error) throw error;
+      fetchUsers();
+    } catch (err) {
+      console.error('Failed to delete user:', err);
+      alert('Failed to delete user: ' + err.message);
+    }
   };
 
   // Appointment handlers
   const handleUpdateAppt = async (id, status) => {
-    await supabase.from('appointments').update({ status }).eq('id', id);
-    setEditingApptId(null);
-    fetchAppointments();
+    try {
+      const { error } = await supabase.from('appointments').update({ status }).eq('id', id);
+      if (error) throw error;
+      setEditingApptId(null);
+      fetchAppointments();
+    } catch (err) {
+      console.error('Failed to update appointment:', err);
+      alert('Failed to update appointment: ' + err.message);
+    }
   };
 
   const handleDeleteAppt = async (id) => {
     if (!window.confirm('Delete this appointment?')) return;
-    await supabase.from('appointments').delete().eq('id', id);
-    fetchAppointments();
+    try {
+      const { error } = await supabase.from('appointments').delete().eq('id', id);
+      if (error) throw error;
+      fetchAppointments();
+    } catch (err) {
+      console.error('Failed to delete appointment:', err);
+      alert('Failed to delete appointment: ' + err.message);
+    }
   };
 
   // Product handlers
@@ -165,15 +189,27 @@ function AdminDashboardView() {
 
   // Order Shipping status handlers
   const handleUpdateOrderStatus = async (id, status) => {
-    await supabase.from('orders').update({ status }).eq('id', id);
-    fetchOrders();
+    try {
+      const { error } = await supabase.from('orders').update({ status }).eq('id', id);
+      if (error) throw error;
+      fetchOrders();
+    } catch (err) {
+      console.error('Failed to update order status:', err);
+      alert('Failed to update order status: ' + err.message);
+    }
   };
 
   // Reviews handlers
   const handleDeleteReview = async (id) => {
     if (!window.confirm('Delete this user review?')) return;
-    await supabase.from('reviews').delete().eq('id', id);
-    fetchReviews();
+    try {
+      const { error } = await supabase.from('reviews').delete().eq('id', id);
+      if (error) throw error;
+      fetchReviews();
+    } catch (err) {
+      console.error('Failed to delete review:', err);
+      alert('Failed to delete review: ' + err.message);
+    }
   };
 
   const pendingAppts = appointments.filter(a => a.status === 'pending').length;
