@@ -26,7 +26,7 @@ function AuthView() {
   if (isSignUp) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 md:p-8 ambient-bg font-display">
-        <div className="flex w-full max-w-[1100px] min-h-[750px] bg-white/40 backdrop-blur-xl border border-white/30 shadow-2xl overflow-hidden rounded-3xl">
+        <div className="flex w-full max-w-[1100px] min-h-[750px] bg-white/40 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden rounded-3xl">
           {/* Left Editorial Banner */}
           <div className="hidden lg:flex flex-1 relative flex-col justify-between p-12 overflow-hidden bg-[#1B3C53]">
             <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ background: 'radial-gradient(circle at 30% 20%, #456882 0%, #1B3C53 80%)' }}></div>
@@ -124,7 +124,7 @@ function AuthView() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 md:p-8 ambient-bg font-display">
-      <div className="max-w-[900px] w-full bg-white/40 backdrop-blur-xl border border-white/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[550px]">
+      <div className="max-w-[900px] w-full bg-white/40 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[550px]">
         {/* Left Side Form */}
         <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
           <div className="mb-8">

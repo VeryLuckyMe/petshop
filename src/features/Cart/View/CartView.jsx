@@ -8,7 +8,8 @@ function CartView() {
   const navigate = useNavigate();
   const {
     items, getCartTotal, removeFromCart, updateQuantity,
-    isCheckingOut, showOrderStatus, orderId, setShowOrderStatus, handleCheckout
+    isCheckingOut, showOrderStatus, orderId, setShowOrderStatus, handleCheckout,
+    loyaltyPoints, getVoucherDiscount, applyPoints, setApplyPoints
   } = useCartPresenter(navigate);
   const [user, setUser] = useState(null);
 
@@ -22,7 +23,8 @@ function CartView() {
 
   const total = getCartTotal();
   const shipping = total > 1000 ? 0 : 100;
-  const finalTotal = total + shipping;
+  const discountAmount = applyPoints ? getVoucherDiscount() : 0;
+  const finalTotal = Math.max(0, total + shipping - discountAmount);
 
   if (showOrderStatus && orderId) {
     return (
@@ -98,6 +100,30 @@ function CartView() {
                     <span>Shipping</span>
                     <span className="font-bold text-slate-800">{shipping === 0 ? 'FREE' : `₱${shipping.toFixed(2)}`}</span>
                   </div>
+                  
+                  {loyaltyPoints >= 10 && (
+                    <div className="pt-4 mt-2 border-t border-slate-100">
+                      <label className="flex items-start gap-3 cursor-pointer group">
+                        <div className="relative flex items-center justify-center mt-1">
+                          <input 
+                            type="checkbox" 
+                            className="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
+                            checked={applyPoints}
+                            onChange={(e) => setApplyPoints(e.target.checked)}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-bold text-slate-800 flex justify-between">
+                            <span>Use Loyalty Points</span>
+                            {applyPoints && <span className="text-primary">-₱{getVoucherDiscount().toFixed(2)}</span>}
+                          </div>
+                          <p className="text-xs text-slate-500">
+                            You have {loyaltyPoints} points. Use {Math.floor(loyaltyPoints/10)*10} to save ₱{getVoucherDiscount().toFixed(2)}.
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+                  )}
                 </div>
                 <div className="flex justify-between items-center py-4 border-t border-slate-100 mb-8">
                   <span className="font-bold text-slate-800">Total</span>

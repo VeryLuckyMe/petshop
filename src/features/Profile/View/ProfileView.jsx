@@ -2,8 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../../components/Navbar';
 import { useProfilePresenter } from '../Presenter/ProfilePresenter';
+import AddressManagementView from './AddressManagementView';
+import PetProfileManagerView from './PetProfileManagerView';
 
-const TABS = ['Profile', 'My Appointments', 'Edit Profile', 'Change Password'];
+const TABS = ['Profile', 'My Appointments', 'My Pets', 'Addresses', 'Edit Profile', 'Change Password'];
 
 function ProfileView() {
   const navigate = useNavigate();
@@ -77,14 +79,25 @@ function ProfileView() {
                   { label: 'Email', value: profile?.email || user?.email, icon: 'mail' },
                   { label: 'Role', value: profile?.role, icon: 'shield_person' },
                 ].map((item) => (
-                  <div key={item.label} className="p-4 bg-slate-50 rounded-2xl flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center">
-                      <span className="material-symbols-outlined text-slate-400 text-[20px]">{item.icon}</span>
+                  <div key={item.label} className="p-4 bg-slate-50 rounded-2xl flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center">
+                        <span className="material-symbols-outlined text-slate-400 text-[20px]">{item.icon}</span>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{item.label}</p>
+                        <p className="font-bold text-slate-800">{item.value || '—'}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{item.label}</p>
-                      <p className="font-bold text-slate-800">{item.value || '—'}</p>
-                    </div>
+                    {item.label === 'Role' && item.value === 'admin' && (
+                      <button 
+                        onClick={() => navigate('/admin')}
+                        className="px-4 py-2 bg-slate-800 text-white font-bold text-xs rounded-xl hover:bg-slate-700 transition-colors flex items-center gap-1.5 shadow-sm"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">admin_panel_settings</span>
+                        Admin Panel
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -118,6 +131,16 @@ function ProfileView() {
                   </div>
                 )}
               </div>
+            )}
+            
+            {/* ── MY PETS ── */}
+            {activeTab === 'My Pets' && (
+              <PetProfileManagerView user={user} />
+            )}
+
+            {/* ── ADDRESSES ── */}
+            {activeTab === 'Addresses' && (
+              <AddressManagementView user={user} />
             )}
 
             {/* ── EDIT PROFILE ── */}

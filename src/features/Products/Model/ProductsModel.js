@@ -6,5 +6,10 @@ export const ProductsModel = {
   },
   async getSession() {
     return await supabase.auth.getSession();
+  },
+  async logRecentlyViewed(userId, productId) {
+    return await supabase
+      .from('recently_viewed')
+      .upsert({ user_id: userId, product_id: productId, viewed_at: new Date().toISOString() });
   }
 };

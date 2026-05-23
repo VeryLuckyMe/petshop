@@ -10,6 +10,18 @@ export const useProductsPresenter = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   const categories = ['All', 'Nutrition', 'Toys', 'Bedding', 'Accessories'];
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const handleViewProduct = async (product) => {
+    setSelectedProduct(product);
+    if (user?.id) {
+      try {
+        await ProductsModel.logRecentlyViewed(user.id, product.id);
+      } catch (e) {
+        console.error('Error logging recently viewed:', e);
+      }
+    }
+  };
 
   useEffect(() => {
     const init = async () => {
@@ -35,6 +47,7 @@ export const useProductsPresenter = () => {
 
   return {
     user, loading, filteredProducts, searchTerm, selectedCategory, categories,
+    selectedProduct, setSelectedProduct, handleViewProduct,
     setSearchTerm, setSelectedCategory
   };
 };

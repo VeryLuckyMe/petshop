@@ -95,7 +95,10 @@ function DashboardView() {
                       isLargeCard ? 'md:col-span-2 md:row-span-2' : 'md:col-span-1'
                     }`}
                   >
-                    <div className={`relative overflow-hidden ${isLargeCard ? 'aspect-[4/3] md:aspect-auto md:grow' : 'aspect-square'}`}>
+                    <div 
+                      onClick={() => navigate(`/products/${product.id}`)}
+                      className={`relative overflow-hidden cursor-pointer ${isLargeCard ? 'aspect-[4/3] md:aspect-auto md:grow' : 'aspect-square'}`}
+                    >
                       <img 
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" 
                         src={product.image_url} 
@@ -109,7 +112,10 @@ function DashboardView() {
                     </div>
                     <div className="p-6 flex flex-col justify-between">
                       <div>
-                        <h4 className="font-extrabold text-[#1B3C53] text-lg leading-snug group-hover:text-[#ec5b13] transition-colors font-['Outfit',sans-serif]">
+                        <h4 
+                          onClick={() => navigate(`/products/${product.id}`)}
+                          className="font-extrabold text-[#1B3C53] text-lg leading-snug group-hover:text-[#ec5b13] cursor-pointer transition-colors font-['Outfit',sans-serif]"
+                        >
                           {product.name}
                         </h4>
                         <p className="text-xs text-slate-400 mt-1.5 leading-relaxed line-clamp-2">
@@ -117,7 +123,7 @@ function DashboardView() {
                         </p>
                       </div>
                       <div className="flex justify-between items-center mt-5">
-                        <span className="font-black text-xl text-[#1B3C53]">${product.price}</span>
+                        <span className="font-black text-xl text-[#1B3C53]">₱{product.price}</span>
                         <button 
                           onClick={() => addToCart(product)} 
                           className="bg-[#1B3C53] text-white p-3 rounded-full hover:bg-[#ec5b13] hover:scale-105 active:scale-95 transition-all duration-300 shadow-md"

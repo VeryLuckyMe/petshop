@@ -33,6 +33,7 @@ function Navbar({ user }) {
               { label: 'Products', path: '/products' },
               { label: 'Services', path: '/services' },
               { label: 'About Us', path: '/about' },
+              { label: 'Help', path: '/help' },
             ].map((link) => (
               <Link
                 key={link.path}
@@ -71,6 +72,12 @@ function Navbar({ user }) {
                 {user.user_metadata?.username || user.email.split('@')[0]}
               </Link>
             )}
+            <Link to="/recently-viewed" className="relative text-[#1B3C53] hover:text-[#ec5b13] transition-colors duration-300 flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-100/60">
+              <span className="material-symbols-outlined text-xl">history</span>
+            </Link>
+            <Link to="/wishlist" className="relative text-[#1B3C53] hover:text-[#ec5b13] transition-colors duration-300 flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-100/60">
+              <span className="material-symbols-outlined text-xl">favorite</span>
+            </Link>
             <Link to="/cart" className="relative text-[#1B3C53] hover:text-[#ec5b13] transition-colors duration-300 flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-100/60">
               <span className="material-symbols-outlined text-xl">shopping_cart</span>
               {getCartItemsCount() > 0 && (

@@ -58,6 +58,7 @@ const cartReducer = (state, action) => {
 export const CartProvider = ({ children }) => {
   const [cartState, dispatch] = useReducer(cartReducer, { items: [] });
   const [user, setUser] = useState(null);
+  const [loyaltyPoints, setLoyaltyPoints] = useState(0);
 
   useEffect(() => {
     // Initial session check
@@ -65,6 +66,7 @@ export const CartProvider = ({ children }) => {
       if (session) {
         setUser(session.user);
         fetchCart(session.user.email);
+        fetchLoyaltyPoints(session.user.email);
       }
     });
 
@@ -73,8 +75,10 @@ export const CartProvider = ({ children }) => {
       if (session) {
         setUser(session.user);
         fetchCart(session.user.email);
+        fetchLoyaltyPoints(session.user.email);
       } else {
         setUser(null);
+        setLoyaltyPoints(0);
         dispatch({ type: 'CLEAR_CART' });
       }
     });
@@ -167,6 +171,41 @@ export const CartProvider = ({ children }) => {
     return cartState.items.reduce((total, item) => total + item.quantity, 0);
   };
 
+  const fetchLoyaltyPoints = async (email) => {
+    const { data, error } = await supabase
+      .from('zootopiaDatabase')
+      .select('loyalty_points')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (!error && data) {
+      setLoyaltyPoints(data.loyalty_points || 0);
+    }
+  };
+
+  const updateLoyaltyPoints = async (newPoints) => {
+    if (user) {
+      setLoyaltyPoints(newPoints);
+      await supabase
+        .from('zootopiaDatabase')
+        .update({ loyalty_points: newPoints })
+        .eq('email', user.email);
+    }
+  };
+
+  const useLoyaltyPoints = (pointsToUse) => {
+    if (loyaltyPoints >= pointsToUse) {
+      updateLoyaltyPoints(loyaltyPoints - pointsToUse);
+      return true;
+    }
+    return false;
+  };
+
+  // ₱50 discount for every 10 points
+  const getVoucherDiscount = () => {
+    return Math.floor(loyaltyPoints / 10) * 50;
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -176,7 +215,11 @@ export const CartProvider = ({ children }) => {
         updateQuantity,
         clearCart,
         getCartTotal,
-        getCartItemsCount
+        getCartItemsCount,
+        loyaltyPoints,
+        useLoyaltyPoints,
+        getVoucherDiscount,
+        updateLoyaltyPoints
       }}
     >
       {children}

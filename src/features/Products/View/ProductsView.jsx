@@ -1,14 +1,18 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../../../components/Navbar';
 import { useProductsPresenter } from '../Presenter/ProductsPresenter';
 import { useCartModel } from '../../Cart/Model/CartContext';
+import { useWishlist } from '../../Wishlist/Model/WishlistContext';
 
 function ProductsView() {
+  const navigate = useNavigate();
   const {
     user, loading, filteredProducts, searchTerm, selectedCategory, categories,
     setSearchTerm, setSelectedCategory
   } = useProductsPresenter();
   const { addToCart } = useCartModel();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
   if (loading) {
     return (
@@ -61,14 +65,28 @@ function ProductsView() {
                   {filteredProducts.length > 0 ? (
                     filteredProducts.map((product) => (
                       <div key={product.id} className="group flex flex-col bg-white dark:bg-brand-dark rounded-lg overflow-hidden border border-brand-soft hover:border-primary/50 transition-all">
-                        <div className="aspect-square bg-brand-soft overflow-hidden relative">
-                          <img className="w-full h-full object-cover transition-transform group-hover:scale-105" src={product.image_url} alt={product.name} />
+                        <div 
+                          className="aspect-square bg-brand-soft overflow-hidden relative group/image cursor-pointer"
+                          onClick={() => navigate(`/products/${product.id}`)}
+                        >
+                          <img className="w-full h-full object-cover transition-transform group-hover/image:scale-105" src={product.image_url} alt={product.name} />
+                          <button 
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); isInWishlist(product.id) ? removeFromWishlist(product.id) : addToWishlist(product); }}
+                            className="absolute top-3 right-3 bg-white/80 backdrop-blur-sm p-2 rounded-full hover:bg-white text-red-500 shadow-sm transition-all hover:scale-110"
+                          >
+                            <span className="material-symbols-outlined text-sm">{isInWishlist(product.id) ? 'favorite' : 'favorite_border'}</span>
+                          </button>
                         </div>
                         <div className="p-4 flex flex-col gap-1">
                           <p className="text-xs text-brand-light font-bold uppercase tracking-wider">{product.category}</p>
-                          <h4 className="text-brand-dark dark:text-white font-bold text-sm">{product.name}</h4>
+                          <h4 
+                            onClick={() => navigate(`/products/${product.id}`)} 
+                            className="text-brand-dark dark:text-white font-bold text-sm cursor-pointer hover:text-primary transition-colors"
+                          >
+                            {product.name}
+                          </h4>
                           <div className="flex items-center justify-between mt-2">
-                            <span className="text-brand-dark dark:text-white font-black text-lg">${product.price}</span>
+                            <span className="text-brand-dark dark:text-white font-black text-lg">₱{product.price}</span>
                             <button onClick={() => addToCart(product)} className="bg-brand-dark text-white p-2 rounded-lg hover:bg-primary transition-colors">
                               <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
                             </button>
